@@ -1,0 +1,68 @@
+<div class="signature-dialog">
+  <h2 mat-dialog-title>Add Your Signature</h2>
+  
+  <mat-dialog-content>
+    <form [formGroup]="signatureForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Your Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter your name" (input)="signatureMode === 'type' && generateTypeSignature()">
+        <mat-error *ngIf="signatureForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Your Email</mat-label>
+        <input matInput formControlName="email" placeholder="Enter your email">
+        <mat-error *ngIf="signatureForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="signatureForm.get('email')?.hasError('email')">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Comment (Optional)</mat-label>
+        <textarea matInput formControlName="comment" placeholder="Add a comment"></textarea>
+      </mat-form-field>
+
+      <mat-button-toggle-group class="signature-mode-toggle" [value]="signatureMode" (change)="setSignatureMode($event.value)">
+        <mat-button-toggle value="draw">Draw</mat-button-toggle>
+        <mat-button-toggle value="type">Type</mat-button-toggle>
+        <mat-button-toggle value="upload">Upload</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div [ngSwitch]="signatureMode">
+        <app-signature-pad *ngSwitchCase="'draw'"
+                          (signatureCreated)="onSignatureCreated($event)">
+        </app-signature-pad>
+
+        <div *ngSwitchCase="'type'" class="type-signature">
+          <div class="signature-preview" *ngIf="signatureForm.get('signature')?.value">
+            <img [src]="signatureForm.get('signature')?.value" alt="Type signature preview">
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'upload'" class="upload-signature">
+          <input type="file" accept="image/*" #fileInput style="display: none"
+                 (change)="handleFileInput($event)">
+          <button mat-stroked-button (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            Upload Signature Image
+          </button>
+          <div class="signature-preview" *ngIf="signatureForm.get('signature')?.value">
+            <img [src]="signatureForm.get('signature')?.value" alt="Uploaded signature preview">
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!signatureForm.valid">
+      Sign Document
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,188 @@
+.document-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    align-items: center;
+
+    .mode-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      font-size: 14px;
+      padding: 0 12px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #1976d2;
+      }
+    }
+  }
+
+  .document-container {
+    position: relative;
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .signature-fields-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+
+      .signature-page-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        .signature-field {
+          position: absolute;
+          background-color: rgba(0, 123, 255, 0.1);
+          border: 2px solid #007bff;
+          border-radius: 4px;
+          cursor: move;
+          pointer-events: all;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: rgba(0, 123, 255, 0.2);
+          }
+
+          &.selected {
+            border-color: #0056b3;
+            border-style: solid;
+            z-index: 100;
+          }
+
+          &.signed {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-color: #28a745;
+            cursor: default;
+          }
+
+          .field-controls {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+
+            .resize-handle {
+              position: absolute;
+              width: 10px;
+              height: 10px;
+              background-color: #fff;
+              border: 2px solid #007bff;
+              pointer-events: all;
+              cursor: pointer;
+
+              &.top-left {
+                top: -5px;
+                left: -5px;
+                cursor: nw-resize;
+              }
+
+              &.top-right {
+                top: -5px;
+                right: -5px;
+                cursor: ne-resize;
+              }
+
+              &.bottom-left {
+                bottom: -5px;
+                left: -5px;
+                cursor: sw-resize;
+              }
+
+              &.bottom-right {
+                bottom: -5px;
+                right: -5px;
+                cursor: se-resize;
+              }
+            }
+
+            .delete-button {
+              position: absolute;
+              top: -20px;
+              right: -20px;
+              background-color: #fff;
+              color: #dc3545;
+              pointer-events: all;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+              &:hover {
+                background-color: #dc3545;
+                color: #fff;
+              }
+            }
+          }
+
+          .signature-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+
+            img {
+              max-width: 100%;
+              max-height: 70%;
+              object-fit: contain;
+            }
+
+            .signature-info {
+              margin-top: 5px;
+              text-align: center;
+              font-size: 12px;
+
+              span {
+                display: block;
+                color: #666;
+              }
+            }
+          }
+
+          .signature-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #007bff;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .audit-log {
+    margin-top: 20px;
+  }
+}
+
+::ng-deep .mat-expansion-panel-header {
+  background-color: #f5f5f5;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 16px;
+}

@@ -1,0 +1,92 @@
+<div class="document-viewer-container">
+  <div class="toolbar">
+    <button mat-raised-button [color]="isPlacingSignature ? 'warn' : 'primary'" (click)="toggleSignaturePlacement()" *ngIf="isCreator">
+      <mat-icon>{{ isPlacingSignature ? 'cancel' : 'add' }}</mat-icon>
+      {{ isPlacingSignature ? 'Cancel Adding Fields' : 'Add Signature Field' }}
+    </button>
+    <div class="mode-indicator" *ngIf="isPlacingSignature">
+      <mat-icon>info</mat-icon>
+      Click anywhere on the document to add a signature field
+    </div>
+    <div class="mode-indicator" *ngIf="!isPlacingSignature && signatureFields.length > 0">
+      <mat-icon>info</mat-icon>
+      Click and drag fields to reposition them, or use the corner handles to resize
+    </div>
+    
+    <button mat-raised-button color="accent" (click)="downloadFinal()" *ngIf="document?.status === 'completed'">
+      <mat-icon>download</mat-icon>
+      Download Final Document
+    </button>
+  </div>
+
+  <div class="document-container">
+    <ng-container *ngIf="pdfSrc">
+      <pdf-viewer
+        [src]="pdfSrc"
+        [render-text]="true"
+        [original-size]="false"
+        [show-all]="true"
+        [fit-to-page]="true"
+        (click)="onPdfClick($event)"
+        style="width: 100%; height: 800px;">
+      </pdf-viewer>
+
+      <div class="signature-fields-container">
+        <div *ngFor="let field of signatureFields" class="signature-page-container" [style.top.px]="getPageOffset(field.page)">
+          <div class="signature-field"
+               [style.left.%]="field.x"
+               [style.top.%]="field.y"
+               [style.width.%]="field.width"
+               [style.height.%]="field.height"
+               [class.signed]="field.signedBy"
+               [class.selected]="selectedField === field"
+               (mousedown)="onFieldMouseDown($event, field)"
+               (click)="field.signedBy ? null : selectField(field)">
+            <div class="signature-content" *ngIf="field.signedBy">
+              <img [src]="field.signedBy.signature" alt="Signature">
+              <div class="signature-info">
+                <span>{{ field.signedBy.name }}</span>
+                <span>{{ field.signedBy.timestamp | date:'short' }}</span>
+              </div>
+            </div>
+            <div class="signature-placeholder" *ngIf="!field.signedBy">
+              Click to Sign
+            </div>
+            
+            <!-- Resize und Delete Controls -->
+            <div class="field-controls" *ngIf="selectedField === field && !field.signedBy">
+              <div class="resize-handle top-left" (mousedown)="onResizeStart($event, field, 'top-left')"></div>
+              <div class="resize-handle top-right" (mousedown)="onResizeStart($event, field, 'top-right')"></div>
+              <div class="resize-handle bottom-left" (mousedown)="onResizeStart($event, field, 'bottom-left')"></div>
+              <div class="resize-handle bottom-right" (mousedown)="onResizeStart($event, field, 'bottom-right')"></div>
+              <button mat-icon-button class="delete-button" (click)="deleteField(field)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="audit-log" *ngIf="document?.auditLog?.length">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Audit Log
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <mat-list-item *ngFor="let log of document.auditLog">
+          <mat-icon matListIcon>history</mat-icon>
+          <div matLine>{{ log.action }}</div>
+          <div matLine>
+            By {{ log.performedBy.name }} ({{ log.performedBy.email }})
+            at {{ log.timestamp | date:'medium' }}
+          </div>
+          <div matLine *ngIf="log.details">{{ log.details }}</div>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </div>
+</div>

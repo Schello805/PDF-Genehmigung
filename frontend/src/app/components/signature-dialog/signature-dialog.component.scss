@@ -1,0 +1,44 @@
+.signature-dialog {
+  .full-width {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .signature-mode-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    width: 100%;
+
+    .mat-button-toggle {
+      flex: 1;
+    }
+  }
+
+  .type-signature,
+  .upload-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .signature-preview {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 1rem;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

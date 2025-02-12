@@ -1,0 +1,47 @@
+<div class="upload-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Upload Document for Signing</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Your Name</mat-label>
+          <input matInput formControlName="creatorName" placeholder="Enter your name">
+          <mat-error *ngIf="uploadForm.get('creatorName')?.hasError('required')">
+            Name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Your Email</mat-label>
+          <input matInput formControlName="creatorEmail" placeholder="Enter your email">
+          <mat-error *ngIf="uploadForm.get('creatorEmail')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="uploadForm.get('creatorEmail')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <div class="file-upload">
+          <button type="button" mat-stroked-button (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon>
+            Select PDF File
+          </button>
+          <input #fileInput type="file" accept="application/pdf" (change)="onFileSelected($event)" style="display: none">
+          <span *ngIf="selectedFile" class="file-name">
+            {{ selectedFile.name }}
+          </span>
+        </div>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!uploadForm.valid || isUploading">
+            <mat-icon>upload</mat-icon>
+            {{ isUploading ? 'Uploading...' : 'Upload Document' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
